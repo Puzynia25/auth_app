@@ -8,7 +8,7 @@ const User = sequelize.define("user", {
     password: { type: DataTypes.STRING },
     // registred_at: { type: DataTypes.DATE },
     // login_at: { type: DataTypes.DATE },
-    // status: { type: DataTypes.STRING, defaultValue: "active" },
+    status: { type: DataTypes.STRING, defaultValue: "active" },
     // role: { type: DataTypes.STRING, defaultValue: "ADMIN" },
 });
 

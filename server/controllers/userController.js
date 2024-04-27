@@ -29,6 +29,7 @@ class UserController {
             name,
             email,
             password: hashPassword,
+            // status: "active"
         });
         const token = generateJwt(user.id, user.name, user.email);
 
@@ -59,9 +60,10 @@ class UserController {
         return res.json({ token });
     }
 
-    // async create(req, res) {}
-    // async getAll(req, res) {}
-    // async delete(req, res) {}
+    async getAll(req, res) {
+        const users = await User.findAll();
+        return res.json(users);
+    }
 }
 
 module.exports = new UserController();
