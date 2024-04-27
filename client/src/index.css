@@ -1,0 +1,28 @@
+input[type="checkbox"] {
+    accent-color: initial;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    accent-color: #198754;
+    background-color: #198754;
+    border-color: #198754;
+}
+
+input[type="checkbox"]:focus {
+    outline: 2px solid #198754;
+}
+
+input::placeholder {
+    font-size: small;
+    color: rgba(33, 37, 41, 0.4) !important;
+}
+
+input:focus {
+    border-color: rgb(26, 135, 84) !important;
+    box-shadow: 0 0 0 0.2rem rgba(26, 135, 84, 0.25) !important;
+}
+
+.status {
+    width: 64px;
+}
