@@ -18,6 +18,7 @@ export const login = async (name, email, password) => {
         email,
         password,
     });
+
     localStorage.setItem("token", data.token);
     return jwtDecode(data.token);
 };
@@ -33,8 +34,12 @@ export const fetchAllUsers = async () => {
 };
 
 export const deleteUser = async (id) => {
-    const { data } = await $authHost.delete("api/user/table", {
+    const { data } = await $authHost.delete("api/user/delete", {
         data: { id: id },
     });
     return data;
+};
+
+export const updateUsersStatus = async (ids, status) => {
+    return $authHost.patch("api/user/status", { ids, status });
 };

@@ -44,6 +44,10 @@ class UserController {
             return next(ApiError.badRequest("User is not found"));
         }
 
+        if (user.status === "blocked") {
+            return next(ApiError.unauthorized("Your account is blocked!"));
+        }
+
         //убедиться, что пароль, который ввел пользователь, совпадает с тем, который лежит в БД
         let comparePassword = bcrypt.compareSync(password, user.password);
         if (!comparePassword) {
@@ -59,10 +63,9 @@ class UserController {
         const { email } = req.body;
         const user = await User.findOne({ where: { email } });
         if (user) {
-            // Возвращаем true, если пользователь найден
             return res.json({ exists: true });
         }
-        // Возвращаем false, если пользователь не найден
+
         return res.json({ exists: false });
     }
 
@@ -75,12 +78,17 @@ class UserController {
         const { id } = req.body;
         const deletedUser = await User.destroy({ where: { id } });
 
-        // Если количество удаленных строк равно 0, то пользователя с таким id не нашли
         if (deletedUser === 0) {
             return next(ApiError.badRequest("User not found"));
         }
 
-        // Если удаление прошло успешно, отправляем статус 204 (No Content)
+        return res.status(204).send();
+    }
+
+    async updateUsersStatus(req, res, next) {
+        const { ids, status } = req.body;
+
+        await User.update({ status }, { where: { id: ids } });
         return res.status(204).send();
     }
 }

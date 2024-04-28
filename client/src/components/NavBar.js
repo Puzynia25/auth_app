@@ -6,7 +6,7 @@ import { Context } from "../App";
 const NavBar = () => {
     const { user, setUser, isAuth, setIsAuth } = useContext(Context);
     const navigate = useNavigate();
-
+    console.log(user, isAuth, "NavBar_user");
     // console.log(user, "user");
     const logOut = () => {
         localStorage.removeItem("user");

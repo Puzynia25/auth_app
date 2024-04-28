@@ -67,6 +67,7 @@ const UserTable = () => {
             <ContextToolBar.Provider
                 value={{
                     userTable,
+                    setUserTable,
                     selectedIds,
                     setSelectedIds,
                     setStatusUser,

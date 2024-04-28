@@ -17,6 +17,31 @@ const authInterceptor = (config) => {
     return config;
 };
 
+// const blockedUserInterceptor = () => {
+//     (response) => response,
+//         (error) => {
+//             if (
+//                 error.response &&
+//                 (error.response.status === 401 || error.response.status === 403)
+//             ) {
+//                 localStorage.removeItem("token");
+
+//                 const context = React.useContext(Context);
+
+//                 // Сбросить состояние пользователя
+//                 if (context) {
+//                     context.setUser({});
+//                     context.setIsAuth(false);
+//                 }
+//                 window.location.href = LOGIN_ROUTE;
+//             }
+
+//             return Promise.reject(error);
+//         };
+
+// };
+
 $authHost.interceptors.request.use(authInterceptor);
+// $authHost.interceptors.response.use(clientInterceptor);
 
 export { $host, $authHost };
