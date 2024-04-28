@@ -3,50 +3,25 @@ import ToolBar from "../components/ToolBar";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE } from "../utils/consts";
 import { Context } from "../App";
 import { NavLink } from "react-router-dom";
-import { fetchAllUsers } from "../http/userTableAPI";
+import { fetchAllUsers } from "../http/userAPI";
 
 export const ContextToolBar = createContext(null);
 
 const UserTable = () => {
     const { isAuth } = useContext(Context);
     const [userTable, setUserTable] = useState([]);
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedIds, setSelectedIds] = useState([]);
     const [selectedAll, setSelectedAll] = useState(false);
     const [statusUser, setStatusUser] = useState(true);
-    const [deleteUser, setDeleteUser] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
 
     useEffect(() => {
-        fetchAllUsers()
-            .then((data) => setUserTable(data))
-            .finally(() => console.log(userTable));
-    }, []);
+        fetchAllUsers().then((data) => setUserTable(data));
+    }, [isDelete]);
 
     useEffect(() => {
-        setSelectedAll(selectedItems.length === userTable.length);
-    }, [selectedItems, userTable, statusUser]);
-
-    const handleSelectedAllChange = (event) => {
-        const isChecked = event.target.checked;
-        setSelectedAll(isChecked);
-
-        if (isChecked) {
-            setSelectedItems(userTable.map((item) => item.id));
-        } else {
-            setSelectedItems([]);
-        }
-    };
-
-    const handleCheckboxChange = (event, id) => {
-        const isChecked = event.target.checked;
-
-        setSelectedItems((prevSelectedItems) => {
-            if (isChecked) {
-                return [...prevSelectedItems, id];
-            } else {
-                return prevSelectedItems.filter((itemId) => itemId !== id);
-            }
-        });
-    };
+        setSelectedAll(selectedIds.length === userTable.length);
+    }, [selectedIds, userTable, statusUser]);
 
     const formattedDate = (currentDate) => {
         const date = new Date(currentDate);
@@ -63,14 +38,40 @@ const UserTable = () => {
 
         return formattedDate;
     };
+
+    const handleSelectedAllChange = (event) => {
+        const isChecked = event.target.checked;
+        setSelectedAll(isChecked);
+
+        if (isChecked) {
+            setSelectedIds(userTable.map((item) => item.id));
+        } else {
+            setSelectedIds([]);
+        }
+    };
+
+    const handleCheckboxChange = (event, id) => {
+        const isChecked = event.target.checked;
+
+        setSelectedIds((prevSelectedItems) => {
+            if (isChecked) {
+                return [...prevSelectedItems, id];
+            } else {
+                return prevSelectedItems.filter((itemId) => itemId !== id);
+            }
+        });
+    };
+
     return (
         <>
             <ContextToolBar.Provider
                 value={{
                     userTable,
-                    selectedItems,
-                    setSelectedItems,
+                    selectedIds,
+                    setSelectedIds,
                     setStatusUser,
+                    isDelete,
+                    setIsDelete,
                 }}>
                 <ToolBar />
             </ContextToolBar.Provider>
@@ -105,7 +106,7 @@ const UserTable = () => {
                                             className="form-check-input"
                                             type="checkbox"
                                             value=""
-                                            checked={selectedItems.includes(raw.id)}
+                                            checked={selectedIds.includes(raw.id)}
                                             onChange={(e) => handleCheckboxChange(e, raw.id)}
                                         />
                                     </td>

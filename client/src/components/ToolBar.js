@@ -1,23 +1,61 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ContextToolBar } from "../pages/UserTable";
+import { check, deleteUser } from "../http/userAPI";
+import { Context } from "../App";
+import { useNavigate } from "react-router-dom";
+import { LOGIN_ROUTE } from "../utils/consts";
 
 const ToolBar = () => {
-    const { userTable, selectedItems, setSelectedItems, statusUser, setStatusUser } =
-        useContext(ContextToolBar);
+    const {
+        userTable,
+        selectedIds,
+        setSelectedIds,
+        statusUser,
+        setStatusUser,
+        isDelete,
+        setIsDelete,
+    } = useContext(ContextToolBar);
+
+    const { user, setUser, setIsAuth } = useContext(Context);
+    const navigate = useNavigate();
 
     const changeStatusUser = (status) => {
         userTable.forEach((user) => {
-            if (selectedItems.includes(user.id)) {
+            if (selectedIds.includes(user.id)) {
                 user.status = status;
             }
         });
         setStatusUser(!status);
-        setSelectedItems([]);
+        setSelectedIds([]);
+    };
+
+    const onDeleteUser = () => {
+        if (selectedIds.length > 1) {
+            alert("Please, choose only 1 user");
+        } else {
+            setIsDelete(true);
+            deleteUser(selectedIds[0])
+                .then((data) => console.log(data))
+                .then(() => {
+                    checkDeletedUser(user.email);
+                });
+        }
+        setSelectedIds([]);
+    };
+
+    const checkDeletedUser = (email) => {
+        check(email).then((data) => {
+            if (data === false) {
+                localStorage.removeItem("user");
+                setUser({});
+                setIsAuth(false);
+            }
+        });
     };
 
     return (
         <main className="w-75 mx-auto mt-5">
-            <div className="flex ">
+            <div className="d-flex">
                 <button
                     type="button"
                     className="btn btn-outline-dark"
@@ -30,7 +68,10 @@ const ToolBar = () => {
                     onClick={() => changeStatusUser("blocked")}>
                     <i className="fas fa-user-slash" />
                 </button>
-                <button type="button" className="ms-1 btn btn-outline-danger">
+                <button
+                    type="button"
+                    className="ms-1 btn btn-outline-danger"
+                    onClick={() => onDeleteUser()}>
                     <i className="fas fa-trash" />
                 </button>
             </div>

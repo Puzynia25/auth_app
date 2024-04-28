@@ -22,8 +22,19 @@ export const login = async (name, email, password) => {
     return jwtDecode(data.token);
 };
 
-export const check = async () => {
-    const { data } = await $authHost.get("api/user/auth");
-    localStorage.setItem("token", data.token);
-    return jwtDecode(data.token);
+export const check = async (email) => {
+    const { data } = await $host.post("api/user/check", { email });
+    return data.exists;
+};
+
+export const fetchAllUsers = async () => {
+    const { data } = await $authHost.get("api/user/table");
+    return data;
+};
+
+export const deleteUser = async (id) => {
+    const { data } = await $authHost.delete("api/user/table", {
+        data: { id: id },
+    });
+    return data;
 };

@@ -24,6 +24,7 @@ const Auth = () => {
                 data = await registration(name, email, password);
             }
 
+            localStorage.setItem("user", JSON.stringify(data));
             setUser(data);
             setIsAuth(true);
             navigate(USERTABLE_ROUTE);

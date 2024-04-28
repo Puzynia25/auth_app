@@ -24,12 +24,12 @@ class UserController {
 
         //если пользователя с таким email мы не нашли в базе, то хешируем пароль
         const hashPassword = await bcrypt.hash(password, 5);
+
         //создаем пользователя в БД
         const user = await User.create({
             name,
             email,
             password: hashPassword,
-            // status: "active"
         });
         const token = generateJwt(user.id, user.name, user.email);
 
@@ -54,18 +54,35 @@ class UserController {
         return res.json({ token });
     }
 
-    //проверка: авторизован пользователь или нет
+    //есть ли такой пользователь в БД
     async check(req, res, next) {
-        const token = generateJwt(req.user.id, req.user.name, req.user.email);
-        return res.json({ token });
+        const { email } = req.body;
+        const user = await User.findOne({ where: { email } });
+        if (user) {
+            // Возвращаем true, если пользователь найден
+            return res.json({ exists: true });
+        }
+        // Возвращаем false, если пользователь не найден
+        return res.json({ exists: false });
     }
 
     async getAll(req, res) {
         const users = await User.findAll();
         return res.json(users);
     }
+
+    async deleteUser(req, res, next) {
+        const { id } = req.body;
+        const deletedUser = await User.destroy({ where: { id } });
+
+        // Если количество удаленных строк равно 0, то пользователя с таким id не нашли
+        if (deletedUser === 0) {
+            return next(ApiError.badRequest("User not found"));
+        }
+
+        // Если удаление прошло успешно, отправляем статус 204 (No Content)
+        return res.status(204).send();
+    }
 }
 
 module.exports = new UserController();
-
-//добавить поля в user: registration_date, last_login_date, status

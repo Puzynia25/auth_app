@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { authRoutes, publicRoutes } from "../routes";
 import { Context } from "../App";
-import UserTable from "../pages/UserTable";
+import Auth from "../pages/Auth";
+import { LOGIN_ROUTE } from "../utils/consts";
 
 const AppRouter = () => {
     const { isAuth } = useContext(Context);
@@ -16,7 +17,8 @@ const AppRouter = () => {
             {publicRoutes.map(({ path, Component }) => (
                 <Route key={path} path={path} element={Component} />
             ))}
-            <Route path="*" element={<UserTable />} />
+            <Route path="/" element={<Navigate to={LOGIN_ROUTE} />} />
+            <Route path="*" element={<Auth />} />
         </Routes>
     );
 };

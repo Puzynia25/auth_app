@@ -6,10 +6,7 @@ const User = sequelize.define("user", {
     name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING, unique: true },
     password: { type: DataTypes.STRING },
-    // registred_at: { type: DataTypes.DATE },
-    // login_at: { type: DataTypes.DATE },
     status: { type: DataTypes.STRING, defaultValue: "active" },
-    // role: { type: DataTypes.STRING, defaultValue: "ADMIN" },
 });
 
 module.exports = { User };
