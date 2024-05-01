@@ -9,6 +9,7 @@ const Auth = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Auth = () => {
 
     const click = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             let data;
             if (isLogin) {
@@ -31,6 +33,7 @@ const Auth = () => {
         } catch (e) {
             alert(e.response.data.message);
         }
+        setLoading(false);
     };
 
     return (
@@ -73,6 +76,7 @@ const Auth = () => {
                     <button
                         type="submit"
                         className="btn btn-success w-100 rounded-pill"
+                        disabled={loading}
                         onClick={(e) => click(e)}>
                         Continue
                     </button>
