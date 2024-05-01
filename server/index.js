@@ -10,13 +10,16 @@ const PORT = process.env.PORT || 9000;
 
 const app = express();
 
-app.use(
-    cors({
-        origin: ["*"],
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    })
-);
+const corsOptions = {
+    origin: ["https://auth-app-iw5q.onrender.com", "https://auth-app-frontend-whjv.onrender.com"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 app.use(checkStatusMiddleWare);
 app.use("/api", router);
