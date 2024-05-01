@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ContextToolBar } from "../pages/UserTable";
 import {
     isFindUser,
@@ -9,20 +9,14 @@ import {
 } from "../http/userAPI";
 import { Context } from "../App";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 const ToolBar = () => {
-    const {
-        userTable,
-        setUserTable,
-        selectedIds,
-        setSelectedIds,
-        statusUser,
-        setStatusUser,
-        isDelete,
-        setIsDelete,
-    } = useContext(ContextToolBar);
+    const { userTable, setUserTable, selectedIds, setSelectedIds, setStatusUser, setIsDelete } =
+        useContext(ContextToolBar);
 
     const { user, setUser, setIsAuth } = useContext(Context);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const onChangeStatusUser = (status) => {
@@ -40,7 +34,7 @@ const ToolBar = () => {
                         setIsAuth(true);
                     })
                     .catch((e) => {
-                        logOutBlockedUser(e, setUser, setIsAuth, navigate);
+                        catchHandler(e);
                         console.log(e.response.data.message, "message");
                     });
 
@@ -48,11 +42,21 @@ const ToolBar = () => {
                 setStatusUser(!status);
                 setSelectedIds([]);
             })
-            .catch((error) => {
-                logOutBlockedUser(error, setUser, setIsAuth, navigate);
-                console.error("Error updating user status:", error);
+            .catch((e) => {
+                catchHandler(e);
+                console.error("Error updating user status:", e);
             });
     };
+
+    const catchHandler = (e) => {
+        setLoading(true);
+        logOutBlockedUser(e, setUser, setIsAuth, navigate);
+        setLoading(false);
+    };
+
+    if (loading) {
+        return <Spinner />;
+    }
 
     const onDeleteUser = () => {
         if (selectedIds.length > 1) {
