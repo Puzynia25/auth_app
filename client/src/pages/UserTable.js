@@ -2,21 +2,24 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import ToolBar from "../components/ToolBar";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE } from "../utils/consts";
 import { Context } from "../App";
-import { NavLink } from "react-router-dom";
-import { fetchAllUsers } from "../http/userAPI";
+import { NavLink, useNavigate } from "react-router-dom";
+import { fetchAllUsers, logOutBlockedUser } from "../http/userAPI";
 
 export const ContextToolBar = createContext(null);
 
 const UserTable = () => {
-    const { isAuth } = useContext(Context);
+    const { isAuth, user, setUser, setIsAuth } = useContext(Context);
     const [userTable, setUserTable] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [selectedAll, setSelectedAll] = useState(false);
     const [statusUser, setStatusUser] = useState(true);
     const [isDelete, setIsDelete] = useState(false);
 
+    const navigate = useNavigate();
     useEffect(() => {
-        fetchAllUsers().then((data) => setUserTable(data));
+        fetchAllUsers()
+            .then((data) => setUserTable(data))
+            .catch((e) => logOutBlockedUser(e, setUser, setIsAuth, navigate));
     }, [isDelete]);
 
     useEffect(() => {

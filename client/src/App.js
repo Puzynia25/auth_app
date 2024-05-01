@@ -1,21 +1,12 @@
 import { BrowserRouter } from "react-router-dom";
-import { createContext, useEffect, useState } from "react";
-import NavBar from "./components/NavBar";
-import AppRouter from "./components/AppRouter";
+import { createContext, useState } from "react";
+import Wrapper from "./components/Wrapper";
 
 export const Context = createContext(null);
 
 function App() {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || {});
     const [isAuth, setIsAuth] = useState(false);
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-            setIsAuth(true);
-        }
-    }, []);
 
     return (
         <Context.Provider
@@ -26,8 +17,7 @@ function App() {
                 setIsAuth,
             }}>
             <BrowserRouter>
-                <NavBar />
-                <AppRouter />
+                <Wrapper />
             </BrowserRouter>
         </Context.Provider>
     );

@@ -1,7 +1,14 @@
 import React, { useContext } from "react";
 import { ContextToolBar } from "../pages/UserTable";
-import { check, deleteUser, updateUsersStatus } from "../http/userAPI";
+import {
+    isFindUser,
+    deleteUser,
+    updateUsersStatus,
+    logOutBlockedUser,
+    check,
+} from "../http/userAPI";
 import { Context } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const ToolBar = () => {
     const {
@@ -17,6 +24,7 @@ const ToolBar = () => {
 
     const { user, setUser, setIsAuth } = useContext(Context);
 
+    const navigate = useNavigate();
     const onChangeStatusUser = (status) => {
         updateUsersStatus(selectedIds, status)
             .then(() => {
@@ -26,12 +34,22 @@ const ToolBar = () => {
                     }
                     return user;
                 });
+                check()
+                    .then((data) => {
+                        setUser(user);
+                        setIsAuth(true);
+                    })
+                    .catch((e) => {
+                        logOutBlockedUser(e, setUser, setIsAuth, navigate);
+                        console.log(e.response.data.message, "message");
+                    });
 
                 setUserTable(updatedUsers);
                 setStatusUser(!status);
                 setSelectedIds([]);
             })
             .catch((error) => {
+                logOutBlockedUser(error, setUser, setIsAuth, navigate);
                 console.error("Error updating user status:", error);
             });
     };
@@ -51,7 +69,7 @@ const ToolBar = () => {
     };
 
     const checkDeletedUser = (email) => {
-        check(email).then((data) => {
+        isFindUser(email).then((data) => {
             if (data === false) {
                 localStorage.removeItem("user");
                 setUser({});

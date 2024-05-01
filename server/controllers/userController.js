@@ -59,7 +59,7 @@ class UserController {
     }
 
     //есть ли такой пользователь в БД
-    async check(req, res, next) {
+    async isFindUser(req, res, next) {
         const { email } = req.body;
         const user = await User.findOne({ where: { email } });
         if (user) {
@@ -90,6 +90,11 @@ class UserController {
 
         await User.update({ status }, { where: { id: ids } });
         return res.status(204).send();
+    }
+
+    async check(req, res, next) {
+        const token = generateJwt(req.user.id, req.user.name, req.user.email);
+        return res.json({ token });
     }
 }
 

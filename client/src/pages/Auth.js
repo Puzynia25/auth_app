@@ -19,7 +19,7 @@ const Auth = () => {
         try {
             let data;
             if (isLogin) {
-                data = await login(name, email, password);
+                data = await login(email, password);
             } else {
                 data = await registration(name, email, password);
             }

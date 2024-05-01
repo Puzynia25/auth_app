@@ -1,18 +1,31 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, USERTABLE_ROUTE } from "../utils/consts";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../App";
+
+import { check, logOutBlockedUser } from "../http/userAPI";
 
 const NavBar = () => {
     const { user, setUser, isAuth, setIsAuth } = useContext(Context);
     const navigate = useNavigate();
-    console.log(user, isAuth, "NavBar_user");
-    // console.log(user, "user");
+
     const logOut = () => {
         localStorage.removeItem("user");
         setUser({});
         setIsAuth(false);
     };
+
+    useEffect(() => {
+        check()
+            .then((data) => {
+                setUser(user);
+                setIsAuth(true);
+            })
+            .catch((e) => {
+                logOutBlockedUser(e, setUser, setIsAuth, navigate);
+                console.log(e.response.data.message, "message");
+            });
+    }, []);
 
     return (
         <nav className="navbar-expand-lg bg-body-tertiary ">
@@ -22,9 +35,6 @@ const NavBar = () => {
                         <div className="d-flex gap-3">
                             <NavLink className="nav-link active" to={REGISTRATION_ROUTE}>
                                 Auth app
-                            </NavLink>
-                            <NavLink className="nav-link active" to={USERTABLE_ROUTE}>
-                                Table
                             </NavLink>
                         </div>
                         {isAuth ? (
