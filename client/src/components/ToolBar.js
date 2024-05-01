@@ -12,8 +12,15 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 
 const ToolBar = () => {
-    const { userTable, setUserTable, selectedIds, setSelectedIds, setStatusUser, setIsDelete } =
-        useContext(ContextToolBar);
+    const {
+        userTable,
+        setUserTable,
+        selectedIds,
+        setSelectedIds,
+        setStatusUser,
+        isDelete,
+        setIsDelete,
+    } = useContext(ContextToolBar);
 
     const { user, setUser, setIsAuth } = useContext(Context);
     const [loading, setLoading] = useState(false);
@@ -62,13 +69,14 @@ const ToolBar = () => {
         if (selectedIds.length > 1) {
             alert("Please, choose only 1 user");
         } else {
-            setIsDelete(true);
             deleteUser(selectedIds[0])
                 .then((data) => console.log(data))
                 .then(() => {
                     checkDeletedUser(user.email);
-                });
+                })
+                .finally(() => setIsDelete(!isDelete));
         }
+
         setSelectedIds([]);
     };
 
