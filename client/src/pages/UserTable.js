@@ -8,7 +8,7 @@ import { fetchAllUsers, logOutBlockedUser } from "../http/userAPI";
 export const ContextToolBar = createContext(null);
 
 const UserTable = () => {
-    const { isAuth, user, setUser, setIsAuth } = useContext(Context);
+    const { isAuth, setUser, setIsAuth } = useContext(Context);
     const [userTable, setUserTable] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
     const [selectedAll, setSelectedAll] = useState(false);

@@ -2,12 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import NavBar from "./NavBar";
 import AppRouter from "./AppRouter";
-import { LOGIN_ROUTE } from "../utils/consts";
 import { Context } from "../App";
 import { check, logOutBlockedUser } from "../http/userAPI";
 
 function Wrapper() {
-    const { user, setUser, isAuth, setIsAuth } = useContext(Context);
+    const { user, setUser, setIsAuth } = useContext(Context);
     const navigate = useNavigate();
 
     useEffect(() => {

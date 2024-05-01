@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { ContextToolBar } from "../pages/UserTable";
 import {
     isFindUser,
@@ -9,7 +9,6 @@ import {
 } from "../http/userAPI";
 import { Context } from "../App";
 import { useNavigate } from "react-router-dom";
-import Spinner from "./Spinner";
 
 const ToolBar = () => {
     const {
@@ -23,7 +22,6 @@ const ToolBar = () => {
     } = useContext(ContextToolBar);
 
     const { user, setUser, setIsAuth } = useContext(Context);
-    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const onChangeStatusUser = (status) => {
@@ -41,7 +39,7 @@ const ToolBar = () => {
                         setIsAuth(true);
                     })
                     .catch((e) => {
-                        catchHandler(e);
+                        logOutBlockedUser(e, setUser, setIsAuth, navigate);
                         console.log(e.response.data.message, "message");
                     });
 
@@ -50,20 +48,10 @@ const ToolBar = () => {
                 setSelectedIds([]);
             })
             .catch((e) => {
-                catchHandler(e);
+                logOutBlockedUser(e, setUser, setIsAuth, navigate);
                 console.error("Error updating user status:", e);
             });
     };
-
-    const catchHandler = (e) => {
-        setLoading(true);
-        logOutBlockedUser(e, setUser, setIsAuth, navigate);
-        setLoading(false);
-    };
-
-    if (loading) {
-        return <Spinner />;
-    }
 
     const onDeleteUser = () => {
         if (selectedIds.length > 1) {

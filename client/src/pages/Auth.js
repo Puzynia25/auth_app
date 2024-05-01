@@ -5,7 +5,7 @@ import { login, registration } from "../http/userAPI";
 import { Context } from "../App";
 
 const Auth = () => {
-    const { user, setUser, isAuth, setIsAuth } = useContext(Context);
+    const { setUser, setIsAuth } = useContext(Context);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
