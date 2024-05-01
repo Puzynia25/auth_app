@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LOGIN_ROUTE, REGISTRATION_ROUTE } from "../utils/consts";
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, USERTABLE_ROUTE } from "../utils/consts";
 import { useContext, useEffect } from "react";
 import { Context } from "../App";
 
@@ -35,6 +35,9 @@ const NavBar = () => {
                         <div className="d-flex gap-3">
                             <NavLink className="nav-link active" to={REGISTRATION_ROUTE}>
                                 Auth app
+                            </NavLink>
+                            <NavLink className="nav-link active" to={USERTABLE_ROUTE}>
+                                Table
                             </NavLink>
                         </div>
                         {isAuth ? (
