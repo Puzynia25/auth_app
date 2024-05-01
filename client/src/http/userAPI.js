@@ -30,7 +30,7 @@ export const check = async () => {
 };
 
 export const isFindUser = async (email) => {
-    const { data } = await $host.post("api/user/", { email });
+    const { data } = await $host.post("api/user/find-user", { email });
     return data.exists;
 };
 

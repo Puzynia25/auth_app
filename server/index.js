@@ -5,6 +5,7 @@ const cors = require("cors");
 const router = require("./routes/index");
 const errorHandler = require("./middleware/ErrorHandlingMiddleware");
 const checkStatusMiddleWare = require("./middleware/checkStatusMiddleWare");
+const path = require("path");
 
 const PORT = process.env.PORT || 9000;
 
@@ -21,9 +22,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(express.json());
+app.use(express.static(path.resolve(__dirname, "public")));
 app.use(checkStatusMiddleWare);
 app.use("/api", router);
-
 //tha last middleware:
 app.use(errorHandler);
 
